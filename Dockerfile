@@ -19,8 +19,7 @@ LABEL org.opencontainers.image.authors="tassageb" \
 # Install Firebase CLI and FlutterFire CLI
 RUN curl -fsSLo /usr/local/bin/firebase \
         "https://firebase.tools/bin/linux/v${FIREBASE_CLI_VERSION}" \
-    && chmod +x /usr/local/bin/firebase \
-    && firebase --version \
-    && dart pub global activate flutterfire_cli \
-    && echo 'export PATH=$PATH:$HOME/.pub-cache/bin' >> ~/.bashrc \
-    && flutterfire --version
+    && chmod +x /usr/local/bin/firebase
+
+RUN dart pub global activate flutterfire_cli \
+    && echo 'export PATH=$PATH:$HOME/.pub-cache/bin' >> ~/.bashrc
