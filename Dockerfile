@@ -22,7 +22,5 @@ RUN curl -fsSLo /usr/local/bin/firebase \
     && chmod +x /usr/local/bin/firebase \
     && firebase --version \
     && dart pub global activate flutterfire_cli \
+    && echo 'export PATH=$PATH:$HOME/.pub-cache/bin' >> ~/.bashrc \
     && flutterfire --version
-
-# Expose pub-cache binaries to PATH for all shells (works in non-interactive CI)
-ENV PATH="$PATH:/root/.pub-cache/bin"
