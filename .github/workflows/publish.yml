@@ -3,6 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches: [main, master]
+    tags: ["*"]
   workflow_dispatch:
 
 permissions:
@@ -36,11 +37,8 @@ jobs:
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
             type=ref,event=branch
-          labels: |
-            org.opencontainers.image.authors=tassageb
-            org.opencontainers.image.title=flutter-firebase-ci
-            org.opencontainers.image.description=CI image for Flutter projects using Firebase (Firebase CLI + FlutterFire CLI)
-            org.opencontainers.image.licenses=MIT
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -50,9 +48,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            FLUTTER_VERSION=3.44.0
-            FIREBASE_CLI_VERSION=15.29.0
           provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Cleanup buildx
+        if: always()
+        run: docker buildx rm --all-inactive --force 2>/dev/null || true

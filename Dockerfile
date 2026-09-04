@@ -16,10 +16,19 @@ LABEL org.opencontainers.image.authors="tassageb" \
       flutter.version="${FLUTTER_VERSION}" \
       firebase.cli.version="${FIREBASE_CLI_VERSION}"
 
-# Install Firebase CLI and FlutterFire CLI
+# Install Firebase CLI
 RUN curl -fsSLo /usr/local/bin/firebase \
         "https://firebase.tools/bin/linux/v${FIREBASE_CLI_VERSION}" \
     && chmod +x /usr/local/bin/firebase
 
+#Install FlutterFire CLI
 RUN dart pub global activate flutterfire_cli \
     && echo 'export PATH=$PATH:$HOME/.pub-cache/bin' >> ~/.bashrc
+
+#Install tools for building Android apps
+RUN sdkmanager \
+    "build-tools;35.0.0" \
+    "platforms;android-34" \
+    "platforms;android-35" \
+    "cmake;3.22.1" \
+    "ndk;28.2.13676358"
